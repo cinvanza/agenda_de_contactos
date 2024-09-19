@@ -2,6 +2,17 @@
 
 <%= render @contact %>
 
+<p>Latitud: <%= @contact.latitude %></p>
+<p>Longitud: <%= @contact.longitude %></p>
+
+
+<h3>Mapa de la ubicación</h3>
+<div id="map" style="width: 100%; height: 400px;"
+     data-controller="map"
+     data-map-markers-value="<%= [{ lat: @contact.latitude, lng: @contact.longitude }].to_json %>"
+     data-map-api-key-value="<%= ENV['MAPBOX_API_KEY'] %>">
+</div>
+
 <div>
   <%= link_to "Edit this contact", edit_contact_path(@contact) %> |
   <%= link_to "Back to contacts", contacts_path %>

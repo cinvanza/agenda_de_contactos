@@ -1,18 +1,68 @@
-
-<%= simple_form_for(@contact) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-
-  <div class="form-inputs">
-    <%= f.input :first_name %>
-    <%= f.input :last_name %>
-    <%= f.input :company %>
-    <%= f.input :main_email %>
-    <%= f.input :main_phone %>
-    <%= f.input :address %>
+<%= form_with(model: contact, local: true, data: { controller: "phone" }) do |f| %>
+  <div>
+    <%= f.label :first_name, "Nombre" %>
+    <%= f.text_field :first_name, class: 'form-control' %>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
+  <div>
+    <%= f.label :last_name, "Apellido" %>
+    <%= f.text_field :last_name, class: 'form-control' %>
+  </div>
+
+  <div>
+    <%= f.label :company, "Empresa" %>
+    <%= f.text_field :company, class: 'form-control' %>
+  </div>
+
+  <div>
+    <%= f.label :main_email, "Correo Electrónico" %>
+    <%= f.text_field :main_email, class: 'form-control' %>
+  </div>
+
+  <div>
+    <%= f.label :address, "Dirección" %>
+    <%= f.text_field :address, class: 'form-control' %>
+  </div>
+
+  <!-- Campos para los números de teléfono -->
+  <h3>Números de Teléfono</h3>
+  <div data-phone-target="phoneNumbers">
+    <%= f.fields_for :phone_numbers do |phone_form| %>
+      <div class="phone-number-fields" data-new-record="false">
+        <%= phone_form.label :number, "Número de Teléfono" %>
+        <%= phone_form.text_field :number, class: 'form-control' %>
+
+        <%= phone_form.label :label, "Etiqueta" %>
+        <%= phone_form.select :label, ["Móvil", "Casa", "Trabajo"], class: 'form-control' %>
+
+        <%= phone_form.hidden_field :_destroy %>
+
+        <%= link_to "Eliminar", '#', class: "remove_phone_number", data: { action: "click->phone#removePhoneNumber" } %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Plantilla oculta para nuevos números de teléfono -->
+  <template data-phone-target="template">
+    <div class="phone-number-fields" data-new-record="true">
+      <label for="contact_phone_numbers_attributes_TEMPLATE_RECORD_number">Número de Teléfono</label>
+      <input type="text" name="contact[phone_numbers_attributes][TEMPLATE_RECORD][number]" id="contact_phone_numbers_attributes_TEMPLATE_RECORD_number" class="form-control">
+
+      <label for="contact_phone_numbers_attributes_TEMPLATE_RECORD_label">Etiqueta</label>
+      <select name="contact[phone_numbers_attributes][TEMPLATE_RECORD][label]" id="contact_phone_numbers_attributes_TEMPLATE_RECORD_label" class="form-control">
+        <option value="Móvil">Móvil</option>
+        <option value="Casa">Casa</option>
+        <option value="Trabajo">Trabajo</option>
+      </select>
+
+      <input type="hidden" name="contact[phone_numbers_attributes][TEMPLATE_RECORD][_destroy]" value="false">
+      <a href="#" class="remove_phone_number" data-action="click->phone#removePhoneNumber">Eliminar</a>
+    </div>
+  </template>
+
+  <%= link_to "Agregar Número de Teléfono", '#', id: "add_phone_number", class: 'btn btn-primary', data: { action: "click->phone#addPhoneNumber" } %>
+
+  <div>
+    <%= f.submit "Guardar Contacto", class: "btn btn-success" %>
   </div>
 <% end %>

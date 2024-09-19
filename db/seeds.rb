@@ -16,7 +16,6 @@ Contact.destroy_all
 PhoneNumber.destroy_all
 Email.destroy_all
 ImportantDate.destroy_all
-Address.destroy_all
 
 # Crear 3 usuarios
 3.times do |i|
@@ -32,26 +31,28 @@ Address.destroy_all
       last_name: Faker::Name.last_name,
       company: Faker::Company.name,
       main_email: Faker::Internet.email,
-      address: Faker::Address.full_address,
+      address: Faker::Address.full_address,  # Aquí guardamos la dirección directamente en 'contacts'
       latitude: Faker::Address.latitude,
       longitude: Faker::Address.longitude,
       user: user
     )
 
     # Añadir 2 números de teléfono para cada contacto
-    2.times do
+    phone_labels = ["Móvil", "Casa", "Trabajo"].shuffle
+    2.times do |i|
       PhoneNumber.create!(
         number: Faker::PhoneNumber.phone_number,
-        label: ["Móvil", "Casa", "Trabajo"].shuffle,
+        label: phone_labels[i],
         contact: contact
       )
     end
 
     # Añadir 2 correos electrónicos para cada contacto
-    2.times do
+    email_labels = ["Personal", "Trabajo"].shuffle
+    2.times do |i|
       Email.create!(
         address: Faker::Internet.email,
-        label: ["Personal", "Trabajo"].sample,
+        label: email_labels[i],
         contact: contact
       )
     end
@@ -60,16 +61,6 @@ Address.destroy_all
     ImportantDate.create!(
       date: Faker::Date.birthday(min_age: 18, max_age: 65),
       label: "Cumpleaños",
-      contact: contact
-    )
-
-    # Añadir 1 dirección para cada contacto
-    Address.create!(
-      street: Faker::Address.street_address,
-      city: Faker::Address.city,
-      state: Faker::Address.state,
-      country: Faker::Address.country,
-      postal_code: Faker::Address.zip_code,
       contact: contact
     )
   end

@@ -9,7 +9,6 @@ class ContactsController < ApplicationController
         (contacts.first_name || ' ' || contacts.last_name) ILIKE :query
         OR contacts.company ILIKE :query
         OR contacts.main_email ILIKE :query
-        OR contacts.main_phone ILIKE :query
       SQL
       @contacts = @contacts.where(sql_subquery, query: "%#{params[:query]}%")
     end
@@ -18,6 +17,11 @@ class ContactsController < ApplicationController
 
   # GET /contacts/1 or /contacts/1.json
   def show
+    @contact = Contact.find(params[:id])
+    @markers = [{
+      lat: @contact.latitude,
+      lng: @contact.longitude
+    }]
   end
 
   # GET /contacts/new
@@ -76,6 +80,6 @@ class ContactsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def contact_params
-      params.require(:contact).permit(:first_name, :last_name, :company, :main_email, :main_phone, :address, :latitude, :longitude, :user_id)
+      params.require(:contact).permit(:first_name, :last_name, :company, :main_email, :address, :latitude, :longitude, :user_id)
     end
 end
