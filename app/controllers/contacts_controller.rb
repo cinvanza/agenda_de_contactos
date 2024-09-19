@@ -3,8 +3,18 @@ class ContactsController < ApplicationController
 
   # GET /contacts or /contacts.json
   def index
-    @contacts = Contact.all
+    @contacts = current_user.contacts
+    if params[:query].present?
+      sql_subquery = <<~SQL
+        (contacts.first_name || ' ' || contacts.last_name) ILIKE :query
+        OR contacts.company ILIKE :query
+        OR contacts.main_email ILIKE :query
+        OR contacts.main_phone ILIKE :query
+      SQL
+      @contacts = @contacts.where(sql_subquery, query: "%#{params[:query]}%")
+    end
   end
+
 
   # GET /contacts/1 or /contacts/1.json
   def show
@@ -22,6 +32,7 @@ class ContactsController < ApplicationController
   # POST /contacts or /contacts.json
   def create
     @contact = Contact.new(contact_params)
+    @contact.user = current_user
 
     respond_to do |format|
       if @contact.save

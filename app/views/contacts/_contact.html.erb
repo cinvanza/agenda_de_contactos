@@ -15,33 +15,21 @@
   </p>
 
   <p>
-    <strong>Main email:</strong>
+    <strong>Email:</strong>
     <%= contact.main_email %>
   </p>
 
   <p>
-    <strong>Main phone:</strong>
-    <%= contact.main_phone %>
+    <strong>Phone Numbers:</strong>
+    <ul>
+      <% contact.phone_numbers.each do |phone| %>
+        <li><%= phone.label %>: <%= phone.number %></li>
+      <% end %>
+    </ul>
   </p>
 
   <p>
     <strong>Address:</strong>
     <%= contact.address %>
   </p>
-
-  <p>
-    <strong>Latitude:</strong>
-    <%= contact.latitude %>
-  </p>
-
-  <p>
-    <strong>Longitude:</strong>
-    <%= contact.longitude %>
-  </p>
-
-  <p>
-    <strong>User:</strong>
-    <%= contact.user_id %>
-  </p>
-
 </div>

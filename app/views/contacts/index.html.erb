@@ -1,14 +1,57 @@
-<p style="color: green"><%= notice %></p>
+<div class="container-fluid" style="background-color: #16325b; padding: 20px; border-radius: 10px;">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="text-center" style="color: #ffdc7f;">Contactos</h1>
+    </div>
+  </div>
 
-<h1>Contacts</h1>
+  <div class="row">
+    <div class="col-12 my-3">
+      <%= form_with url: contacts_path, method: :get, class: "d-flex" do %>
+        <%= text_field_tag :query,
+              params[:query],
+              class: "form-control",
+              placeholder: "Buscar un contacto",
+              style: "border: 2px solid #78b7d0; background-color: #f8f9fa; color: #16325b;" %>
+        <%= submit_tag "Buscar", name: "", class: "btn", style: "background-color: #227b94; color: white; margin-left: 10px;" %>
+      <% end %>
+    </div>
+  </div>
 
-<div id="contacts">
-  <% @contacts.each do |contact| %>
-    <%= render contact %>
-    <p>
-      <%= link_to "Show this contact", contact %>
-    </p>
-  <% end %>
+  <div class="row">
+    <div class="col-12">
+      <%= link_to "Nuevo Contacto", new_contact_path, class: "btn btn-success", style: "background-color: #ffdc7f; color: #16325b;" %>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <table class="table table-striped" style="color: #f8f9fa; width: 100%;">
+        <thead style="background-color: #227b94; color: white;">
+          <tr>
+            <th>Nombre</th>
+            <th>Empresa</th>
+            <th>Email</th>
+            <th>Teléfonos</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @contacts.each do |contact| %>
+            <tr style="background-color: #16325b;">
+              <td><%= "#{contact.first_name} #{contact.last_name}" %></td>
+              <td><%= contact.company %></td>
+              <td><%= contact.main_email %></td>
+              <td><%= contact.phone_numbers.first&.number %></td>
+              <td>
+                <%= link_to "Ver", contact, class: "btn", style: "background-color: #227b94; color: white;" %>
+                <%= link_to "Editar", edit_contact_path(contact), class: "btn", style: "background-color: #78b7d0; color: #16325b;" %>
+                <%= link_to "Eliminar", contact, data: { turbo_method: :delete, confirm: "¿Estás seguro?" }, class: "btn", style: "background-color: #ffdc7f; color: #16325b;" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
-
-<%= link_to "New contact", new_contact_path %>
