@@ -32,8 +32,6 @@ ImportantDate.destroy_all
       company: Faker::Company.name,
       main_email: Faker::Internet.email,
       address: Faker::Address.full_address,  # Aquí guardamos la dirección directamente en 'contacts'
-      latitude: Faker::Address.latitude,
-      longitude: Faker::Address.longitude,
       user: user
     )
 
